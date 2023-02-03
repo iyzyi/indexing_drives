@@ -14,6 +14,9 @@ def log_folder_tree(log_file, path, parent_is_last=1, depth_limit=-1, tab_width=
     if len(str(parent_is_last)) - 1 == depth_limit:
         return
 
+    if '$Recycle.Bin' in path:
+        return
+
     try:
         items = os.listdir(path)
     except PermissionError as e:
@@ -69,7 +72,7 @@ def search_files(drive_letter, search_key):
         last_deepth_index[deepth] = index
         format_data.append((index, file_name, deepth, parent_index))
 
-        res = re.search(re.escape(search_key), file_name)
+        res = re.search(re.escape(search_key.upper()), file_name.upper())       # 都转换成大写字母再比较
         if res:
             search_files.append(index)
 
@@ -122,7 +125,7 @@ if __name__ == '__main__':
             which_drive_can_search()
             dirve_letter = input('\n目标盘符：')
             search_key = input('查找关键字：')
-            search_files(dirve_letter, search_key.upper())
+            search_files(dirve_letter, search_key)
         
         elif choose == '0':
             stop = True
